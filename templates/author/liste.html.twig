@@ -1,0 +1,32 @@
+<h1>voici la liste des auteurs: <h1>
+{% set x=0 %}
+{% if tabAuthors is empty %}
+<h1 style="color :red">Tab vide</h1>
+{% else %}
+<table border=1>
+<tr>
+<th>id</th>
+<th>username</th>
+<th>email</th>
+<th>nb_book</th>
+<th>Action</th>
+</tr>
+
+{% for i in tabAuthors %}
+<tr>
+ <td>{{i.id}}</td>
+<td>{{i.username}}</td>
+<td>{{i.email}}</td>
+<td>{{i.nb_book}}</td>
+<td><a href="{{path('app_author')}}">Show More+</a></td>
+{%  set x=x+i.nb_book %}
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+nb_authors={{tabAuthors | length }}
+<br>
+nb_books={{x}}
+<img src="{{asset('pictures/Logo_ESPRIT_Ariana.jpg')}}" alt="ahmed" height="100px" width="100px">
+
+
