@@ -1,0 +1,13 @@
+<table border=1>
+{% for i in tabBooks %}
+<tr>
+ 
+<td>{{i.ref}}</td>
+<td>{{i.title}}</td>
+<td>{{ i.published ? 'Oui' : 'Non' }}
+</td>
+<td>{{ i.datePublication ? i.datePublication|date('Y-m-d H:i:s') : '' }}</td>
+
+</tr>
+{% endfor %}
+</table>

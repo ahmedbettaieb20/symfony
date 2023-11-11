@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Author;
+use App\Form\AuthorType;
+use App\Repository\AuthorRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\AuthorRepository;
 
 class AuthorController extends AbstractController
 {
@@ -16,32 +20,91 @@ class AuthorController extends AbstractController
             'controller_name' => 'AuthorController',
         ]);
     }
+
     #[Route('/showauthor/{username}', name: 'show_author')]
-    public function showAuthor($username){
-        return $this ->render("author/show.html.twig",array('nameAuthor' =>$username));
+    public function showAuthor($username)
+    {
+        return $this->render("author/show.html.twig"
+            ,array('nameAuthor'=>$username));
     }
 
-    #[Route('/liste', name: 'liste_author')]
-    public function liste(AuthorRepository $repository){
-         /*$authors=array(
-        array('id'=>1,'username'=>'ahmed','email'=>'ahmed@gmail.com','nb_book'=>100,'action'=>''),
-        array('id'=>2,'username'=>'skander','email'=>'skander@gmail.com','nb_book'=>200),
-        array('id'=>3,'username'=>'ali','email'=>'ali@gmail.com','nb_book'=>300),
-        );*/
-        $authors=$repository->findAll();
-
-        return $this->render('author/authors.html.twig',array('tabAuthors'=>$authors) 
+    #[Route('/list', name: 'list_author')]
+    public function listAuthors()
+    {
+        $authors = array(
+            array('id' => 1, 'username' => ' Victor Hugo','email'=> 'victor.hugo@gmail.com', 'nbr_books'=> 100),
+            array ('id' => 2, 'username' => 'William Shakespeare','email'=>
+                'william.shakespeare@gmail.com','nbr_books' => 200),
+            array('id' => 3, 'username' => ' Taha Hussein','email'=> 'taha.hussein@gmail.com','nbr_books' => 300),
         );
+        return $this->render("author/liste.html.twig",
+            array('tabAuthors'=>$authors));
     }
-    #[Route('/addliste', name: 'liste_author')]
-    public function addAuthor(){
-        $author=new author();
-        $author->setEmail("user4@gmail.com");
-        $author->setUsername("user3");
-        $em-=$managerRegistry->getManager();
-        $em->persist($author);
-        $em->flush();
-        return $this->redirectToRoute("liste_authors");
+
+    #[Route('/list1', name: 'list_authors')]
+    public function list(AuthorRepository $repository)
+    {
+        $authors= $repository->findAll();
+
+        return $this->render("author/authors.html.twig",
+            array('tabAuthors'=>$authors));
     }
+
+    #[Route('/addAuthor', name: 'addAuthor')]
+    public function addAuthor(Request $request,ManagerRegistry $managerRegistry)
     
+    {
+       $author= new Author();
+       $form= $this->createForm(AuthorType::class,$author);
+       $form->handleRequest($request);
+       if($form->isSubmitted()){
+        $em= $managerRegistry->getManager();
+        $em->persist($author);
+       $em->flush();
+       return $this->redirectToRoute("list_authors");
+       }
+//       $author->setEmail("author4@gmail.com");
+//       $author->setUsername("author4");
+       #$em= $this->getDoctrine()->getManager();
+//        $em= $managerRegistry->getManager();
+//        $em->persist($author);
+//        $em->flush();
+//        return $this->redirectToRoute("list_authors");
+        //1ère méthode
+//        return $this->render("author/add.html.twig"
+//            ,array('formulaireAuthor'=>$form->createView()));
+        //2ème méthode
+        return $this->renderForm("author/add.html.twig"
+            ,array('formulaireAuthor'=>$form));
+    }
+
+    #[Route('/update/{id}', name: 'updateAuthor')]
+    public function updateAuthor($id,AuthorRepository $repository,ManagerRegistry $managerRegistry)
+    {
+        $author= $repository->find($id);
+        $author->setEmail("author5@gmail.com");
+        $author->setUsername("author5");
+        #$em= $this->getDoctrine()->getManager();
+        $em= $managerRegistry->getManager();
+        $em->flush();
+        return $this->redirectToRoute("list_authors");
+    }
+
+    #[Route('/remove/{id}', name: 'remove')]
+
+    public function deleteAuthor(ManagerRegistry $managerRegistry,$id,AuthorRepository $repository)
+    {
+        $author= $repository->find($id);
+        $em= $managerRegistry->getManager();
+        if($author->getNbrBooks()==0){
+            $em->remove($author);
+            $em->flush();
+        }
+        else{
+            return new Response("Error");
+        }
+
+        return $this->redirectToRoute("list_authors");
+
+    }
 }

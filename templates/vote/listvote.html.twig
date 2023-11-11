@@ -1,0 +1,25 @@
+
+{% for j in joueur %}
+<h1>{{j.id}}</h1>
+{% endfor %}
+
+
+
+<table border=1>
+<tr>
+<th>date_vote</th>
+<th>note_vote</th>
+
+
+</tr>
+
+{% for i in tabvote %}
+<tr>
+ <td>{{i.date|date}}</td>
+<td>{{i.noteVote}}</td>
+
+
+
+</tr>
+{% endfor %}
+</table>

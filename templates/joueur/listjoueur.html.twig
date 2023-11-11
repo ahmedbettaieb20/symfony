@@ -1,0 +1,22 @@
+<h1>voici la liste des joueurs: <h1>
+
+
+
+<table border=1>
+<tr>
+<th>nom</th>
+<th>equipe</th>
+<th>Actions</th>
+
+</tr>
+
+{% for i in tabJoueurs %}
+<tr>
+ <td>{{i.nom|upper}}</td>
+<td>{{i.equipe}}</td>
+
+<td><a href="{{path('list_vote',{'id':i.id})}}">Detail vote+</a></td>
+
+</tr>
+{% endfor %}
+</table>

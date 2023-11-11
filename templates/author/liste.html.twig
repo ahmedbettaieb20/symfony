@@ -8,7 +8,7 @@
 <th>id</th>
 <th>username</th>
 <th>email</th>
-<th>nb_book</th>
+<th>nbr_books</th>
 <th>Action</th>
 </tr>
 
@@ -17,9 +17,9 @@
  <td>{{i.id}}</td>
 <td>{{i.username}}</td>
 <td>{{i.email}}</td>
-<td>{{i.nb_book}}</td>
+<td>{{i.nbr_books}}</td>
 <td><a href="{{path('app_author')}}">Show More+</a></td>
-{%  set x=x+i.nb_book %}
+{%  set x=x+i.nbr_books %}
 </tr>
 {% endfor %}
 </table>
